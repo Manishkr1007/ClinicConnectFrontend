@@ -62,7 +62,7 @@ const Navbar = () => {
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
         </li>
       </NavLink>
-      <NavLink to="#">
+      <NavLink to="https://clinic-connect-admin-eosin.vercel.app">
         <li className="py-2 px-3 text-emerald-600 hover:text-emerald-700 font-semibold border border-emerald-200 rounded-lg hover:bg-emerald-50 transition-all duration-300">
           Admin
         </li>
