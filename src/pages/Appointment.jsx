@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 const Appointment = () => {
   const { docId } = useParams();
-  const { doctors, backendUrl, token, getDoctorsData } = useContext(AppContext);
+  const { doctors, backendUrl, token, userData, getDoctorsData } = useContext(AppContext);
   const daysofWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   const navigate = useNavigate();
@@ -27,6 +27,9 @@ const Appointment = () => {
 
   const getAvailableSlots = async () => {
     setDocSlots([]);
+
+    // Prevent running if docInfo or slots_booked is not loaded
+    if (!docInfo || !docInfo.slots_booked) return;
 
     let today = new Date();
 
@@ -50,22 +53,23 @@ const Appointment = () => {
 
       while (currentDate < endTime) {
         let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-       
+
         let day = currentDate.getDate();
-        let month = currentDate.getMonth() + 1; 
+        let month = currentDate.getMonth() + 1;
         let year = currentDate.getFullYear();
 
         const slotDate = day + "_" + month + "_" + year;
-        const slotTime = formattedTime
-       
-        const isSlotAvailable = docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) ? false : true;
+        const slotTime = formattedTime;
 
-       if(isSlotAvailable) {
-        timeSlots.push({  
-          datetime: new Date(currentDate),
-          time: formattedTime
-        });
-      }
+        // Check slot availability safely
+        const isSlotAvailable = docInfo.slots_booked && docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) ? false : true;
+
+        if (isSlotAvailable) {
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime
+          });
+        }
 
         currentDate.setMinutes(currentDate.getMinutes() + 30);
       }
@@ -75,7 +79,7 @@ const Appointment = () => {
   };
 
   const bookAppointment = async () => {
-    if (!token) {
+    if (!userData) {
       toast.warn("Please login to book an appointment.");
       return navigate('/login');
     }
@@ -89,7 +93,13 @@ const Appointment = () => {
   const slotDate = day +"_"+ month + "_" + year;
   console.log("Selected Slot Date:", slotDate,slotTime);
 
-  const {data} = await axios.post(backendUrl + '/api/user/book-appointment',{docId,slotDate,slotTime},{headers:{token}})
+  const {data} = await axios.post(
+    backendUrl + '/api/user/book-appointment',
+    { docId, slotDate, slotTime },
+    token
+      ? { headers: { token } }
+      : { withCredentials: true }
+  )
   if(data.success){
     toast.success("Appointment booked successfully!");
     getDoctorsData();

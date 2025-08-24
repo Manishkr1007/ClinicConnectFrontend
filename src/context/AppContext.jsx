@@ -33,9 +33,10 @@ const AppContextProvider = (props) => {
 
   const loadUserProfileData = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/user/get-profile", {
-        headers: { token },
-      });
+      let config = token
+        ? { headers: { token } }
+        : { withCredentials: true };
+      const { data } = await axios.get(backendUrl + "/api/user/get-profile", config);
       if (data.success) {
         setUserData(data.user);
       } else {
@@ -44,6 +45,20 @@ const AppContextProvider = (props) => {
     } catch (error) {
       console.error("Error loading user data:", error);
       toast.error("Failed to load user data. Please try again later.");
+    }
+  };
+
+  // Fetch current user from backend session (for Google login/session)
+  const fetchCurrentUser = async () => {
+    try {
+      const res = await axios.get(backendUrl + '/api/user/me', { withCredentials: true });
+      // Always use res.data.user if present
+      const user = res.data.user || res.data;
+      setUserData(user);
+      return user;
+    } catch (err) {
+      setUserData(false);
+      return null;
     }
   };
 
@@ -57,10 +72,13 @@ const AppContextProvider = (props) => {
     userData,
     setUserData,
     loadUserProfileData,
+    fetchCurrentUser,
   };
 
   useEffect(() => {
     getDoctorsData();
+    // On mount, try to fetch user from session (for Google login)
+    fetchCurrentUser();
   }, []);
 
   useEffect(() => {

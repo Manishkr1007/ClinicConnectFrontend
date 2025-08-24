@@ -34,10 +34,12 @@ const MyAppointments = () => {
   };
 
   const getUserAppointments = async () => {
+    console.log('getUserAppointments called, token:', token);
     try {
-      const { data } = await axios.get(backendUrl + "/api/user/appointments", {
-        headers: { token },
-      });
+      let config = token
+        ? { headers: { token } }
+        : { withCredentials: true };
+      const { data } = await axios.get(backendUrl + "/api/user/appointments", config);
       if (data.success) {
         setAppointments(data.appointments.reverse());
         // console.log("Appointments fetched successfully:", data.appointments);
@@ -51,10 +53,13 @@ const MyAppointments = () => {
   const cancelAppointment = async (appointmentId) => {
     try {
       console.log("Cancelling appointment with ID:", appointmentId);
+      let config = token
+        ? { headers: { token } }
+        : { withCredentials: true };
       const { data } = await axios.post(
         backendUrl + "/api/user/cancel-appointment",
         { appointmentId },
-        { headers: { token } }
+        config
       );
       if (data.success) {
         toast.success("Appointment cancelled successfully.");
@@ -85,10 +90,13 @@ const MyAppointments = () => {
         console.log("Payment successful:", response);
 
         try {
+          let config = token
+            ? { headers: { token } }
+            : { withCredentials: true };
           const { data } = await axios.post(
             backendUrl + "/api/user/varify-payment",
             response,
-            { headers: { token } }
+            config
           );
 
           if (data.success) {
@@ -111,10 +119,13 @@ const MyAppointments = () => {
 
   const appointmentRazorpay = async (appointmentId) => {
     try {
+      let config = token
+        ? { headers: { token } }
+        : { withCredentials: true };
       const { data } = await axios.post(
         backendUrl + "/api/user/payment-razorpay",
         { appointmentId },
-        { headers: { token } }
+        config
       );
       if (data.success) {
         initPay(data.order);
@@ -126,9 +137,7 @@ const MyAppointments = () => {
   };
 
   useEffect(() => {
-    if (token) {
-      getUserAppointments();
-    }
+    getUserAppointments();
   }, [token]);
 
   return (

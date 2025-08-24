@@ -24,10 +24,13 @@ const MyProfile = () => {
 
       image && formData.append("image", image);
 
+      let config = token
+        ? { headers: { token } }
+        : { withCredentials: true };
       const { data } = await axios.post(
         backendUrl + "/api/user/update-profile",
         formData,
-      {  headers: { token },}
+        config
       );
 
       if (data.success) {

@@ -66,7 +66,7 @@ const About = () => {
             
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Our Mission</h2>
             <p className="text-gray-700 text-lg leading-relaxed">
-              Welcome to <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600 px-1">ClinicConnect</span>, your trusted partner in managing your healthcare needs conveniently and efficiently. At Prescripto, we understand the challenges individuals face when it comes to scheduling doctor appointments and managing their health records.
+              Welcome to <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600 px-1">ClinicConnect</span>, your trusted partner in managing your healthcare needs conveniently and efficiently. At ClinicConnect, we understand the challenges individuals face when it comes to scheduling doctor appointments and managing their health records.
             </p>
             
             {/* Stats */}
@@ -229,7 +229,7 @@ const About = () => {
         <div className="text-center mt-16">
           <div className="bg-gradient-to-r from-red-500 to-blue-600 rounded-3xl p-8 text-white shadow-2xl">
             <h3 className="text-3xl font-bold mb-4">Ready to Get Started?</h3>
-            <p className="text-xl mb-6 opacity-90">Join thousands of satisfied patients who trust Prescripto with their healthcare needs.</p>
+            <p className="text-xl mb-6 opacity-90">Join thousands of satisfied patients who trust ClinicConnect with their healthcare needs.</p>
             <button className="bg-white text-gray-800 px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300">
               Book Your First Appointment
             </button>
